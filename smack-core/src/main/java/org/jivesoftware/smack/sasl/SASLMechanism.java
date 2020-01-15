@@ -73,7 +73,7 @@ public abstract class SASLMechanism implements Comparable<SASLMechanism> {
     protected ConnectionConfiguration connectionConfiguration;
 
     /**
-     * Then authentication identity (authcid). RFC 6120 § 6.3.7 informs us that some SASL mechanisms use this as a
+     * The authentication identity (authcid). RFC 6120 § 6.3.7 informs us that some SASL mechanisms use this as a
      * "simple user name". But the exact form is a matter of the mechanism and that it does not necessarily map to an
      * localpart. But it usually is the localpart of the client JID, although sometimes other formats are used (e.g. the
      * full JID).

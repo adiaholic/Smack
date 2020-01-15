@@ -362,4 +362,12 @@ public final class SASLAuthentication {
         }
         return mechanisms.getMechanisms();
     }
+
+    public boolean isApplicableFor(XMPPConnection connection) {
+        if (currentMechanism.getName().contentEquals("PLAIN") && !connection.isSecureConnection()) {
+            return false;
+        }
+        else
+            return true;
+    }
 }
