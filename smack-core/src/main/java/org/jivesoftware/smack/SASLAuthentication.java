@@ -17,6 +17,7 @@
 
 package org.jivesoftware.smack;
 
+import java.awt.peer.TextComponentPeer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +31,7 @@ import java.util.logging.Logger;
 
 import javax.net.ssl.SSLSession;
 import javax.security.auth.callback.CallbackHandler;
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
 
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
@@ -364,10 +366,73 @@ public final class SASLAuthentication {
     }
 
     public boolean isApplicableFor(XMPPConnection connection) {
-        if (currentMechanism.getName().contentEquals("PLAIN") && !connection.isSecureConnection()) {
-            return false;
+    
+    	String mechanism = null ;
+    	mechanism = currentMechanism.getName();
+    
+    	String exceptionExplaination = null;
+    	
+    	switch (mechanism) {
+		case "PLAIN":
+			// disallow PLAIN over insecured connections.
+	    	if (currentMechanism.isInsecurePlainAllowed()) {
+	            if (currentMechanism.getName().contentEquals("PLAIN") && !connection.isSecureConnection()) {
+	                exceptionExplaination += " PLAIN over insecured connections is disallowed per default";
+	            	return false;
+	            }
+	        }
+            break;
+
+		case "EXTERNAL":
+            
+            break;
+
+		case "DIGEST-MD5":
+            
+			break;
         }
-        else
-            return true;
+    	
+    	if (connection.getClass().getName() == "XMPPBoshConnection") {
+    		
+    	}
+        if (connection.getClass().getName() == "XMPPTCPConnection") {
+        	
+        }
+    	
+    	/*
+    	 *  Check for TCP support through RFC 6120.
+    	 *  If the lookup methods in RFC 6120 are exhausted, use TXT lookups.
+    	 */
+
+    	/*
+    	 *  Check for TCP+TLS support through RFC 6120.
+    	 *  If the lookup methods in RFC 6120 are exhausted, use TXT lookups.
+    	 */
+
+    	/*
+    	 *  Check for BOSH support through RFC 6120.
+    	 *  If the lookup methods in RFC 6120 are exhausted, use TXT lookups.
+    	 */
+
+    	// If the BOSH <body/> wrapper is not empty, then it SHOULD contain
+    	// A complete element used for SASL negotiation and qualified by the 'urn:ietf:params:xml:ns:xmpp-sasl' namespace.
+    	
+    	
+    	
+    	/*
+    	 *  Check for Websockets support through RFC 6120.
+    	 *  If the lookup methods in RFC 6120 are exhausted, use TXT lookups.
+    	 *  Smack currently does not support transport via Websockets.
+    	 *  Make changes after websocket support is available.
+    	 */
+
+    	/*
+    	 * The HTTP lookup method uses Web Host Metadata RFC 6415 to categorize
+    	 * and list the URIs of alternative connection methods. It is primarily
+    	 * intended for use by clients in environments where the ability to 
+    	 * perform DNS queries is restricted, such as in web browsers.
+    	 */
+
+    	return true;
     }
 }

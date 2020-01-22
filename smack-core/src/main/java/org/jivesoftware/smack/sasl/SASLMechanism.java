@@ -56,7 +56,10 @@ public abstract class SASLMechanism implements Comparable<SASLMechanism> {
     public static final String EXTERNAL = "EXTERNAL";
     public static final String GSSAPI = "GSSAPI";
     public static final String PLAIN = "PLAIN";
-
+    
+    // To make the mechanism less brittle and more interoperable.
+    public static boolean ALLOW_INSECURE_PLAIN = false;
+    
     /**
      * Boolean indicating if SASL negotiation has finished and was successful.
      */
@@ -323,6 +326,14 @@ public abstract class SASLMechanism implements Comparable<SASLMechanism> {
                     InterruptedException, NoResponseException {
         if (exception != null) {
             if (exception instanceof SmackSaslException) {
+            	
+            	/*
+            	 * Add an explaination if authentication fails to the SmackSaslException
+            	 * that some mechanisms where not applicable for the connection at a given time.
+            	 * This probably means that isApplicableFor may returns a String explaining
+            	 * the reason why the mechanism is not applicable.
+            	 */
+            	
                 throw (SmackSaslException) exception;
             } else if (exception instanceof SASLErrorException) {
                 throw (SASLErrorException) exception;
@@ -359,6 +370,14 @@ public abstract class SASLMechanism implements Comparable<SASLMechanism> {
      */
     protected static String saslPrep(String string) {
         return Normalizer.normalize(string, Form.NFKC);
+    }
+    
+    public void setInsecurePlain(boolean bool) {
+    	ALLOW_INSECURE_PLAIN = bool;
+    }
+    
+    public boolean isInsecurePlainAllowed() {
+    	return ALLOW_INSECURE_PLAIN;
     }
 
     @Override

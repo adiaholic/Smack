@@ -398,7 +398,7 @@ public class XMPPBOSHConnection extends AbstractXMPPConnection {
     protected void afterSaslAuthenticationSuccess()
                     throws NotConnectedException, InterruptedException, SmackWrappedException {
         // XMPP over BOSH is unusual when it comes to SASL authentication: Instead of sending a new stream open, it
-        // requires a special XML element ot be send after successful SASL authentication.
+        // requires a special XML element to be send after successful SASL authentication.
         // See XEP-0206 § 5., especially the following is example 5 of XEP-0206.
         ComposableBody composeableBody = ComposableBody.builder().setNamespaceDefinition("xmpp",
                         XMPPBOSHConnection.XMPP_BOSH_NS).setAttribute(
