@@ -77,7 +77,7 @@ public class IntrospectionProvider{
                     InstantiationException, IllegalAccessException, XmlPullParserException,
                     IOException, IllegalArgumentException, InvocationTargetException,
                     ClassNotFoundException {
-        ParserUtils.assertAtStartTag(parser);
+        ParserUtils.prepareToParse(parser);
         Object object = objectClass.getConstructor().newInstance();
         outerloop: while (true) {
             XmlPullParser.Event eventType = parser.next();

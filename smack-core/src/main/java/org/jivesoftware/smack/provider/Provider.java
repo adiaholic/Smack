@@ -45,7 +45,7 @@ public abstract class Provider<E extends Element> extends AbstractProvider<E> {
 
     public final E parse(XmlPullParser parser, XmlEnvironment outerXmlEnvironment) throws IOException, XmlPullParserException, SmackParsingException {
         // XPP3 calling convention assert: Parser should be at start tag
-        ParserUtils.assertAtStartTag(parser);
+        ParserUtils.prepareToParse(parser);
 
         final int initialDepth = parser.getDepth();
         final XmlEnvironment xmlEnvironment = XmlEnvironment.from(parser, outerXmlEnvironment);

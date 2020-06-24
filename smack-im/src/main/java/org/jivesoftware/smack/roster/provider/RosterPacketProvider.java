@@ -69,7 +69,7 @@ public class RosterPacketProvider extends IQProvider<RosterPacket> {
     }
 
     public static RosterPacket.Item parseItem(XmlPullParser parser) throws XmlPullParserException, IOException {
-        ParserUtils.assertAtStartTag(parser, RosterPacket.Item.ELEMENT);
+        ParserUtils.prepareToParse(parser, RosterPacket.Item.ELEMENT);
         final int initialDepth = parser.getDepth();
         String jidString = parser.getAttributeValue("", "jid");
         String itemName = parser.getAttributeValue("", "name");

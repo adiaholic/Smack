@@ -1401,7 +1401,7 @@ public abstract class AbstractXMPPConnection implements XMPPConnection {
     }
 
     protected final void parseAndProcessNonza(XmlPullParser parser) throws IOException, XmlPullParserException, SmackParsingException {
-        ParserUtils.assertAtStartTag(parser);
+        ParserUtils.prepareToParse(parser);
 
         final int initialDepth = parser.getDepth();
         final String element = parser.getName();
@@ -1435,7 +1435,7 @@ public abstract class AbstractXMPPConnection implements XMPPConnection {
 
     protected void parseAndProcessStanza(XmlPullParser parser)
                     throws XmlPullParserException, IOException, InterruptedException {
-        ParserUtils.assertAtStartTag(parser);
+        ParserUtils.prepareToParse(parser);
         int parserDepth = parser.getDepth();
         Stanza stanza = null;
         try {

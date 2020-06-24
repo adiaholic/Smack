@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.jivesoftware.smack.util.PacketParserUtils;
+import org.jivesoftware.smack.util.ParserUtils;
 import org.jivesoftware.smack.xml.XmlPullParser;
 import org.jivesoftware.smack.xml.XmlPullParserException;
 
@@ -85,7 +86,7 @@ public class DataLayoutTest {
         assertEquals(TEST_OUTPUT_2, output);
 
         XmlPullParser parser = PacketParserUtils.getParserFor(output);
-
+        ParserUtils.prepareToParse(parser);
         layout = DataLayoutProvider.parse(parser);
 
         assertEquals(3 , layout.getPageLayout().size());
@@ -119,6 +120,7 @@ public class DataLayoutTest {
         assertEquals(TEST_OUTPUT_SPECIAL, output);
 
         XmlPullParser parser = PacketParserUtils.getParserFor(output);
+        ParserUtils.prepareToParse(parser);
 
         layout = DataLayoutProvider.parse(parser);
 

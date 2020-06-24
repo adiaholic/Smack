@@ -35,7 +35,7 @@ import org.jivesoftware.smack.xml.XmlPullParserException;
 public class ParseStreamManagement {
 
     public static Enabled enabled(XmlPullParser parser) throws XmlPullParserException, IOException {
-        ParserUtils.assertAtStartTag(parser);
+        ParserUtils.prepareToParse(parser);
         boolean resume = ParserUtils.getBooleanAttribute(parser, "resume", false);
         String id = parser.getAttributeValue("", "id");
         String location = parser.getAttributeValue("", "location");
@@ -46,7 +46,7 @@ public class ParseStreamManagement {
     }
 
     public static Failed failed(XmlPullParser parser) throws XmlPullParserException, IOException {
-        ParserUtils.assertAtStartTag(parser);
+        ParserUtils.prepareToParse(parser);
         String name;
         StanzaError.Condition condition = null;
         List<StanzaErrorTextElement> textElements = new ArrayList<>(4);
@@ -84,7 +84,7 @@ public class ParseStreamManagement {
     }
 
     public static Resumed resumed(XmlPullParser parser) throws XmlPullParserException, IOException {
-        ParserUtils.assertAtStartTag(parser);
+        ParserUtils.prepareToParse(parser);
         long h = ParserUtils.getLongAttribute(parser, "h");
         String previd = parser.getAttributeValue("", "previd");
         parser.next();
@@ -93,7 +93,7 @@ public class ParseStreamManagement {
     }
 
     public static AckAnswer ackAnswer(XmlPullParser parser) throws XmlPullParserException, IOException {
-        ParserUtils.assertAtStartTag(parser);
+        ParserUtils.prepareToParse(parser);
         long h = ParserUtils.getLongAttribute(parser, "h");
         parser.next();
         ParserUtils.assertAtEndTag(parser);
@@ -101,7 +101,7 @@ public class ParseStreamManagement {
     }
 
     public static AckRequest ackRequest(XmlPullParser parser) throws XmlPullParserException, IOException {
-        ParserUtils.assertAtStartTag(parser);
+        ParserUtils.prepareToParse(parser);
         parser.next();
         ParserUtils.assertAtEndTag(parser);
         return AckRequest.INSTANCE;

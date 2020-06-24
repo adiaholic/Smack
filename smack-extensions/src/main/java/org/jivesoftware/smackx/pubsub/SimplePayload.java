@@ -22,6 +22,7 @@ import javax.xml.namespace.QName;
 
 import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.util.PacketParserUtils;
+import org.jivesoftware.smack.util.ParserUtils;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smack.xml.XmlPullParser;
 import org.jivesoftware.smack.xml.XmlPullParserException;
@@ -47,6 +48,7 @@ public class SimplePayload implements ExtensionElement {
         XmlPullParser parser;
         try {
             parser = PacketParserUtils.getParserFor(xmlPayload);
+            ParserUtils.prepareToParse(parser);
         }
         catch (XmlPullParserException | IOException e) {
             throw new AssertionError(e);
