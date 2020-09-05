@@ -65,7 +65,7 @@ public class CapsV2Extension implements ExtensionElement {
     }
 
     public static CapsV2Extension from(Stanza stanza) {
-        return stanza.getExtension(ELEMENT, NAMESPACE);
+        return (CapsV2Extension) stanza.getExtensionElement(ELEMENT, NAMESPACE);
     }
 
     public static final class HashBuilder implements ExtensionElement{

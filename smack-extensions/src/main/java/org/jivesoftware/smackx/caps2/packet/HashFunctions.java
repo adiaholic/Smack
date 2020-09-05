@@ -16,8 +16,6 @@
  */
 package org.jivesoftware.smackx.caps2.packet;
 
-import org.bouncycastle.jcajce.provider.digest.SHA3;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -62,9 +60,10 @@ public class HashFunctions {
             CapsV2Extension.HashBuilder builder = new CapsV2Extension.HashBuilder();
             String base64Hash;
             if (algo.toLowerCase().contentEquals("sha3-256")) {
-                SHA3.DigestSHA3 sha3 = new SHA3.Digest256();
-                sha3.update(bytes);
-                base64Hash = Base64.getEncoder().encodeToString(sha3.digest());
+                // SHA3.DigestSHA3 sha3 = new SHA3.Digest256();
+                // sha3.update(bytes);
+                // base64Hash = Base64.getEncoder().encodeToString(sha3.digest());
+            	throw new IllegalArgumentException("Find an alternative to bouncy castle");
             }
             else {
                 MessageDigest messageDigest = MessageDigest.getInstance(algo);

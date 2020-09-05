@@ -16,14 +16,12 @@
  */
 package org.jivesoftware.smackx.caps2;
 
-import com.google.common.base.Charsets;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.filter.*;
 import org.jivesoftware.smack.packet.*;
 import org.jivesoftware.smack.util.EqualsUtil;
 import org.jivesoftware.smack.util.HashCode;
 import org.jivesoftware.smackx.caps.EntityCapsManager;
-import org.jivesoftware.smackx.caps.packet.CapsExtension;
 import org.jivesoftware.smackx.caps2.cache.EntityCapsV2PersistentCache;
 import org.jivesoftware.smackx.caps2.packet.CapsV2Extension;
 import org.jivesoftware.smackx.caps2.packet.HashFunctions;
@@ -40,10 +38,10 @@ import org.jxmpp.util.cache.LruCache;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.logging.Logger;
 
 public class EntityCapsManagerV2 extends Manager {
 
@@ -51,13 +49,15 @@ public class EntityCapsManagerV2 extends Manager {
 
     private final ServiceDiscoveryManager sdm;
     private static final Map<XMPPConnection, EntityCapsManagerV2> INSTANCES = new WeakHashMap<>();
-    private volatile Presence presenceSend;
+    
+    @SuppressWarnings("unused")
+	private volatile Presence presenceSend;
 
     private static final Map<String, MessageDigest> SUPPORTED_ALGOS = new HashMap<String, MessageDigest>();
     private static final LruCache<Jid, AlgoHash> JID_TO_NODE_AlgoHash_CACHE = new LruCache<>(10000);
 
     protected static EntityCapsV2PersistentCache persistentCache;
-    private static String ENTITYNODE = SmackConfiguration.SMACK_URL_STRING;
+    // private static String ENTITYNODE = SmackConfiguration.SMACK_URL_STRING;
 
     private static final StanzaFilter PRESENCES_WITH_CAPS = new AndFilter(new StanzaTypeFilter(Presence.class), new StanzaExtensionFilter(
             CapsV2Extension.ELEMENT, CapsV2Extension.NAMESPACE));
@@ -65,15 +65,16 @@ public class EntityCapsManagerV2 extends Manager {
     static final LruCache<String, DiscoverInfo> CAPS_CACHE = new LruCache<>(1000);
     static final LruCache<Jid, EntityCapsManager.NodeVerHash> JID_TO_NODE_ALGOHASH_CACHE = new LruCache<>(10000);
 
-    private static AlgoHash CURRENT_ALGO_HASH;
+    @SuppressWarnings("unused")
+	private static AlgoHash CURRENT_ALGO_HASH;
 
     private EntityCapsManagerV2(XMPPConnection connection,List <String> algo) throws IOException, NoSuchAlgorithmException {
         super(connection);
         this.sdm = ServiceDiscoveryManager.getInstanceFor(connection);
         INSTANCES.put(connection, this);
 
-        connection.addConnectionListener(new AbstractConnectionListener() {
-            @Override
+        connection.addConnectionListener(new ConnectionListener() {
+        	@Override
             public void connected(XMPPConnection connection) {
                 // It's not clear when a server would report the caps stream
                 // feature, so we try to process it after we are connected and
@@ -94,15 +95,14 @@ public class EntityCapsManagerV2 extends Manager {
             }
             private void processCapsStreamFeatureIfAvailable(XMPPConnection connection) {
                 CapsV2Extension capsV2Extension = connection.getFeature(
-                        CapsV2Extension.ELEMENT, CapsExtension.NAMESPACE);
+                        CapsV2Extension.class);
                 if (capsV2Extension == null) {
                     return;
                 }
                 DomainBareJid from = connection.getXMPPServiceDomain();
                 addCapsV2ExtensionInfo(from, capsV2Extension);
             }
-        });
-
+		});
         updateLocalEntityCaps(algo);
 
         connection.addAsyncStanzaListener(new StanzaListener() {
@@ -120,7 +120,8 @@ public class EntityCapsManagerV2 extends Manager {
     }
 
     private void updateLocalEntityCaps(List<String> algo) throws IOException, NoSuchAlgorithmException {
-        XMPPConnection connection = connection();
+        @SuppressWarnings("unused")
+		XMPPConnection connection = connection();
 
         DiscoverInfoBuilder discoverInfoBuilder = DiscoverInfo.builder("synthetized-disco-info-response")
                 .ofType(IQ.Type.result);
@@ -200,7 +201,7 @@ public class EntityCapsManagerV2 extends Manager {
                 while (iterator2.hasNext()) {
                     valuesInField += iterator2.next();
                 }
-                valuesInField = getHexString(formField.getVariable()) + "1f" + valuesInField;
+                valuesInField = getHexString(formField.getFieldName()) + "1f" + valuesInField;
                 valuesInField += "1e";
                 extendedSortedSet.add(valuesInField);
             }
@@ -220,12 +221,12 @@ public class EntityCapsManagerV2 extends Manager {
         return new AlgoHash(hashBuilders);
     }
 
-    private static String getHexString(String attribute) {
+    private static String getHexString(String attribute) throws UnsupportedEncodingException {
         String str = attribute;
         StringBuffer sb = new StringBuffer();
         if(str!=null){
 
-            byte[] ch = str.getBytes(Charsets.UTF_8);
+            byte[] ch = str.getBytes("utf8");
             String hexString;
 
             for(int i=0;i<ch.length;i++) {
@@ -303,7 +304,8 @@ public class EntityCapsManagerV2 extends Manager {
         // Presence presence = new Presence(new PresenceBuilder("entitycapsV2 broadcast"))
     // }
 
-    private static boolean verifyCapabilityHashSet(AlgoHash nodeAlgoHash, DiscoverInfo discoverInfo,List<String> algoList) throws IOException, NoSuchAlgorithmException {
+    @SuppressWarnings("unused")
+	private static boolean verifyCapabilityHashSet(AlgoHash nodeAlgoHash, DiscoverInfo discoverInfo,List<String> algoList) throws IOException, NoSuchAlgorithmException {
         AlgoHash algoHash1 = generateCapabilityHash(discoverInfo,algoList);
         boolean verified = nodeAlgoHash.equals(algoHash1);
         if (verified) {
